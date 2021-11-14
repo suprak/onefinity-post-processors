@@ -1609,6 +1609,15 @@ function onClose() {
   writeln("%");
 }
 
+// allow pass through capability for custom gcode steps
+// ref: https://knowledge.autodesk.com/support/fusion-360/learn-explore/caas/sfdcarticles/sfdcarticles/How-to-use-Manual-NC-options-to-manually-add-code-with-Fusion-360-HSM-CAM.html
+function onPassThrough(text) {
+  var commands = String(text).split(",");
+  for (text in commands) {
+    writeBlock(commands[text]);
+  }
+}
+
 function setProperty(property, value) {
   properties[property].current = value;
 }
