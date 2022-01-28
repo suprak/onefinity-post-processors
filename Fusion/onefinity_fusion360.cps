@@ -660,7 +660,7 @@ function onSection() {
             return;
         }
         writeBlock(
-            sOutput.format(spindleSpeed), mFormat.format(tool.clockwise ? 3 : 4)
+            sOutput.format(spindleSpeed), mFormat.format(tool.clockwise ? 3 : 4), formatComment("MSG, Spindle speed " + spindleSpeed + " RPM, Set Dial to " + ((0.0002*spindleSpeed) - 0.4))
         );
         if (getProperty("spindleDelay") > 0) {
             writeBlock(gOutput.format(4), pFormat.format(getProperty("spindleDelay")));
