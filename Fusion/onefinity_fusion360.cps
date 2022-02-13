@@ -312,6 +312,7 @@ function onOpen() {
 
     sequenceNumber = getProperty("sequenceNumberStart");
     writeln("%");
+    writeComment(new Date().toString())
 
     if (programName) {
         writeComment(programName);
@@ -660,7 +661,10 @@ function onSection() {
             return;
         }
         writeBlock(
-            sOutput.format(spindleSpeed), mFormat.format(tool.clockwise ? 3 : 4), formatComment("MSG, Spindle speed " + spindleSpeed + " RPM, Set Dial to " + ((0.0002*spindleSpeed) - 0.4))
+            sOutput.format(spindleSpeed),
+            mFormat.format(tool.clockwise ? 3 : 4),
+            mFormat.format(0),
+            formatComment("MSG, Spindle speed " + spindleSpeed + " RPM, Set Dial to " + ((0.0002*spindleSpeed) - 0.4))
         );
         if (getProperty("spindleDelay") > 0) {
             writeBlock(gOutput.format(4), pFormat.format(getProperty("spindleDelay")));
@@ -685,10 +689,10 @@ function onSection() {
             return;
         } else {
             if (workOffset != currentWorkOffset) {
-                var wcsComment = "M0 (MSG, WCS changed, shift work tile from "+ currentWorkOffset + " to " + workOffset + " position.)"
-                if (!currentWorkOffset)
+                var wcsComment = "";
+                if (currentWorkOffset)
                 {
-                    wcsComment = "M0 (MSG, WCS change, shift work tile to " + workOffset + " position.)";
+                    wcsComment = "M0 (MSG, WCS changed, shift work tile from "+ currentWorkOffset + " to " + workOffset + " position.)"
                 }
 
                 if (workOffset > 6) {
@@ -696,6 +700,7 @@ function onSection() {
                 } else {
                     writeBlock(gFormat.format(53 + workOffset), wcsComment); // G54->G59
                 }
+
                 currentWorkOffset = workOffset;
             }
         }
@@ -1616,7 +1621,7 @@ function onClose() {
 
     setWorkPlane(new Vector(0, 0, 0)); // reset working plane
 
-    writeRetract(X, Y);
+    // writeRetract(X, Y); // Do not move X/Y home
 
     onImpliedCommand(COMMAND_END);
     onImpliedCommand(COMMAND_STOP_SPINDLE);
